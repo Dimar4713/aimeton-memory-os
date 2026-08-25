@@ -5,6 +5,7 @@ The public system name is AIMETON Cognitive Operations Complex (AIMETON.COGOPS).
 ## Canonical starting documents
 
 - [Four-axis coordination model](FOUR_AXIS_COORDINATION_MODEL.md)
+- [Life-and-Activity Learning](LIFE_AND_ACTIVITY_LEARNING.md)
 - [Compatibility Registry v0.3 + pre-F1 amendment](AIMETON_COGOPS_COMPATIBILITY.md)
 - [Canonical C vs D worked example](COMPATIBILITY_C_VS_D_WORKED_EXAMPLE.md)
 - [Performance and concurrency contract](PERFORMANCE_AND_CONCURRENCY_CONTRACT.md)
@@ -23,6 +24,10 @@ The externally audited v0.3 package remains historical evidence. Repository pre-
 3. CR-06 adds evaluation snapshot coherence so mixed-version V/R/O/A/policy/evidence state cannot silently become an operational ContextBundle.
 
 The next meaningful external audit should review implementation and F1 evidence: freeze commit, benchmark corpus manifest, golden fixtures, raw runs/failures, traces, confidence intervals, performance results and reproduction instructions.
+
+## Learning method
+
+AMOS uses **Life-and-Activity Learning**: real AIMETON work generates a governed Living Development Corpus from which evidence, observations, claims, decisions, outcomes and regression fixtures are derived. MVP starts in Shadow mode; the living stream is a development environment, not sufficient proof of effectiveness by itself. Frozen holdout and independent domain replication remain mandatory for claims.
 
 ## Engineering boundary
 
