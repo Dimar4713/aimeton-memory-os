@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0",
+  "repository": "Dimar4713/aimeton-memory-os",
+  "product": "AIMETON Cognitive Operations Complex",
+  "namespace": "AIMETON.COGOPS",
+  "license": "Apache-2.0",
+  "status": "pre-code-mvp-foundation",
+  "authoritative_interfaces": [
+    "evidence",
+    "descriptor",
+    "policy",
+    "context_bundle",
+    "compatibility_registry",
+    "verification_trace"
+  ]
+}
