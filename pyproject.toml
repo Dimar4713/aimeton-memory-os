@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "aimeton-memory-os"
+version = "0.0.0"
+description = "Evidence-governed four-axis memory core for AIMETON CogOps Complex"
+readme = "README.md"
+requires-python = ">=3.11"
+license = {text = "Apache-2.0"}
+authors = [{name = "AIMETON Project"}]
+classifiers = [
+  "License :: OSI Approved :: Apache Software License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only"
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
