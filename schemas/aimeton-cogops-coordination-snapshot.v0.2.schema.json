@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AIMETON CogOps Coordination Snapshot v0.2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["snapshot_id", "axis_registry_version", "compatibility_registry_version", "axes", "checks", "outcome", "observed_at", "policy_version"],
+  "$defs": {
+    "state": {"enum": ["satisfied", "unresolved", "blocked", "conflict"]},
+    "ref": {"type": "string", "minLength": 1},
+    "axis": {"type": "object", "additionalProperties": false, "required": ["axis_id", "state", "refs"], "properties": {"axis_id": {"enum": ["V", "R", "O", "A"]}, "state": {"$ref": "#/$defs/state"}, "refs": {"type": "array", "items": {"$ref": "#/$defs/ref"}}}},
+    "check": {"type": "object", "additionalProperties": false, "required": ["check_id", "state", "reason_code", "refs"], "properties": {"check_id": {"type": "string", "minLength": 1}, "state": {"$ref": "#/$defs/state"}, "reason_code": {"type": "string", "minLength": 1}, "refs": {"type": "array", "items": {"$ref": "#/$defs/ref"}}}}
+  },
+  "properties": {
+    "snapshot_id": {"type": "string", "pattern": "^cogops:"},
+    "axis_registry_version": {"type": "string", "minLength": 1},
+    "compatibility_registry_version": {"type": "string", "minLength": 1},
+    "axes": {"type": "array", "minItems": 4, "maxItems": 4, "items": {"$ref": "#/$defs/axis"}},
+    "checks": {"type": "array", "items": {"$ref": "#/$defs/check"}},
+    "outcome": {"enum": ["admit", "escalate", "deny"]},
+    "observed_at": {"type": "string", "format": "date-time"},
+    "policy_version": {"type": "string", "minLength": 1}
+  }
+}
