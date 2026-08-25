@@ -1,0 +1,8 @@
+{
+  "repository": "aimeton-memory-os",
+  "version": "0.0.0",
+  "architecture_baseline": "AMOS external audit package v0.3",
+  "compatibility_contract": "v0.3",
+  "coordination_snapshot_schema": "v0.2",
+  "status": "pre-code"
+}
