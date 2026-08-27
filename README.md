@@ -32,6 +32,18 @@ OpenRAG is an optional document/retrieval edge. It is not the source of truth, p
 - tests — golden fixtures and deterministic validation
 - scripts — local, dependency-controlled validation tools
 
+## Automation and runner placement
+
+AMOS follows the AIMETON runner-placement standard instead of owning a dedicated compute server.
+
+- baseline governance, schema validation and deterministic unit tests are `PERSISTENT_CONTROL` workloads;
+- the canonical repository-scoped runner identity is `aimeton-memory-os-ci` with label `memory-os-ci` on the persistent AIMETON main-server control plane;
+- CI must use self-hosted AIMETON capacity and must not depend on GitHub-hosted runners or Marketplace Actions;
+- heavy corpus replay, ablation, benchmark and large-regression workloads are future `SHARED_BURST` candidates and must not be silently moved onto the persistent control lane;
+- shared-burst activation requires separate infrastructure placement and live acceptance before dispatch is enabled.
+
+The baseline workflow materializes an exact commit SHA with Git directly, requires Python 3.12+, validates repository contracts and executes dependency-free tests.
+
 ## Status
 
 Pre-code MVP foundation. Architectural claims are hypotheses to be evaluated by the preregistered ablation protocol.
