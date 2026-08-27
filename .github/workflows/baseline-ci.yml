@@ -1,0 +1,97 @@
+name: AMOS Baseline CI
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/baseline-ci.yml"
+      - "pyproject.toml"
+      - "manifest.json"
+      - "versions.json"
+      - "schemas/**"
+      - "scripts/**"
+      - "src/**"
+      - "tests/**"
+      - "README.md"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/baseline-ci.yml"
+      - "pyproject.toml"
+      - "manifest.json"
+      - "versions.json"
+      - "schemas/**"
+      - "scripts/**"
+      - "src/**"
+      - "tests/**"
+      - "README.md"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: amos-baseline-${{ github.event_name == 'pull_request' && github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  baseline:
+    runs-on: [self-hosted, Linux, X64, memory-os-ci]
+    timeout-minutes: 10
+    env:
+      GH_TOKEN: ${{ github.token }}
+      TARGET_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - name: Verify canonical AMOS runner and Python baseline
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          test "$RUNNER_NAME" = "aimeton-memory-os-ci"
+          python3 - <<'PY'
+          import sys
+          if sys.version_info < (3, 12):
+              raise SystemExit(f"Python >=3.12 required, observed {sys.version}")
+          print(f"python={sys.version.split()[0]}")
+          PY
+
+      - name: Materialize exact revision without Marketplace actions
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          cd "$GITHUB_WORKSPACE"
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          if [[ ! -d .git ]]; then git init; fi
+          git remote remove origin 2>/dev/null || true
+          git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          fetched=false
+          for attempt in 1 2 3 4 5; do
+            if git fetch --no-tags --depth=1 origin "$TARGET_SHA"; then
+              fetched=true
+              break
+            fi
+            test "$attempt" -lt 5
+            sleep $(( attempt * attempt + 1 ))
+          done
+          test "$fetched" = true
+          git checkout --detach --force FETCH_HEAD
+          git reset --hard "$TARGET_SHA"
+          git clean -ffdx
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          git remote set-url origin "https://github.com/${GITHUB_REPOSITORY}.git"
+
+      - name: Compile Python sources and tests
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          python3 -m compileall -q src scripts tests
+
+      - name: Validate AMOS repository contracts
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          python3 scripts/validate_contracts.py
+
+      - name: Run dependency-free baseline tests
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          python3 -m unittest discover -s tests -p 'test_*.py' -v
