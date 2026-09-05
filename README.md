@@ -53,3 +53,5 @@ Pre-code MVP foundation. Architectural claims are hypotheses to be evaluated by 
 Apache-2.0. See LICENSE and NOTICE. AIMETON names and marks are governed separately by TRADEMARKS.md.
 
 SPDX-License-Identifier: Apache-2.0
+
+<!-- org-transfer runner acceptance probe: 2026-09-05 -->
